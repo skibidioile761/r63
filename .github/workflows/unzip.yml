@@ -1,0 +1,59 @@
+name: Unzip to repo root
+
+on:
+  push:
+    paths:
+      - '*.zip'          # chỉ chạy khi có file .zip ở thư mục gốc repo
+  workflow_dispatch:      # cho phép bấm chạy tay trong tab Actions
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Giải nén .zip ra thư mục gốc (không tạo thêm folder)
+        run: |
+          shopt -s nullglob
+          zips=(*.zip)
+          if [ ${#zips[@]} -eq 0 ]; then
+            echo "Không có file .zip ở thư mục gốc."
+            exit 0
+          fi
+
+          for z in "${zips[@]}"; do
+            echo "Giải nén: $z"
+            tmp="$(mktemp -d)"
+            unzip -q -o "$z" -d "$tmp"
+            rm -rf "$tmp/__MACOSX"
+
+            # Nếu zip chỉ có 1 folder bọc ngoài thì bỏ folder đó, lấy nội dung bên trong
+            src="$tmp"
+            entries=("$tmp"/* "$tmp"/.[!.]*)
+            existing=()
+            for e in "${entries[@]}"; do [ -e "$e" ] && existing+=("$e"); done
+            if [ ${#existing[@]} -eq 1 ] && [ -d "${existing[0]}" ]; then
+              src="${existing[0]}"
+            fi
+
+            # copy toàn bộ ra thư mục gốc repo, ghi đè file cũ
+            cp -a "$src"/. .
+            rm -rf "$tmp"
+            git rm -q -f "$z"
+          done
+
+      - name: Commit và push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Không có thay đổi."
+          else
+            git commit -m "Unzip và đưa file ra thư mục gốc"
+            git push
+          fi
+          
