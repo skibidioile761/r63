@@ -39,7 +39,7 @@ local CONFIG = {
 	-- Điền link raw tới thư mục meshes, KẾT THÚC bằng dấu "/":
 	--   https://raw.githubusercontent.com/<user>/<repo>/main/meshes/
 	-- Để "" nếu muốn dùng file có sẵn trong workspace/meshes.
-	BaseUrl = "https://raw.githubusercontent.com/USER/REPO/main/meshes/",
+	BaseUrl = "https://raw.githubusercontent.com/skibidioile761/r63/main/meshes/",
 	ForceRedownload = false,  -- true = luôn tải lại mesh mới (khi bạn vừa cập nhật mesh trên GitHub)
 
 	AssetIds = { -- "rbxassetid://123456" (ưu tiên hơn file local)
@@ -57,8 +57,8 @@ local CONFIG = {
 	BallClothing = true,      -- false = 2 ball chỉ có màu da, không phủ họa tiết áo/quần (hết vòng tròn/hình lạ trên ball)
 	JiggleEnabled = true,
 	JiggleMultiplier = 1,     -- 0 = tắt, 1.5 = nảy mạnh hơn
-	StepBounce = 0.6,         -- độ nảy theo nhịp bước chân khi chạy (0 = tắt)
-	Breathing = 0.008,        -- chuyển động thở nhẹ khi đứng yên (0 = tắt)
+	StepBounce = 0.8,         -- độ nảy theo nhịp bước chân khi chạy (0 = tắt)
+	Breathing = 0.009,        -- chuyển động thở nhẹ khi đứng yên (0 = tắt)
 
 	-- Ép màu da nếu vẫn bị đen, ví dụ: Color3.fromRGB(255, 204, 153). nil = dùng màu gốc
 	SkinColor = nil,
